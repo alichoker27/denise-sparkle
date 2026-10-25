@@ -15,13 +15,15 @@ export function MobileMenu() {
 
   return (
     <div className="md:hidden flex items-center">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-ink focus-ring rounded-md"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
-      </button>
+     <button
+  onClick={() => setIsOpen(!isOpen)}
+  className="p-2 text-ink focus-ring rounded-md"
+  aria-label={isOpen ? "Close menu" : "Open menu"}
+  aria-expanded={isOpen}
+  aria-controls="mobile-menu"
+>
+  {isOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+</button>
 
       {/* Slide-out Overlay */}
       {isOpen && (
