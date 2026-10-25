@@ -1,5 +1,5 @@
 import "server-only";
-import { io } from "next/cache";
+import { connection } from "next/server";
 import { db } from "@/lib/db";
 
 // ---------- Categories ----------
@@ -91,9 +91,9 @@ export async function getBundleBySlug(slug: string) {
 
 // ---------- Discounts (active now) ----------
 export async function listActiveDiscounts() {
-  // io() suspends during prerendering so new Date() is evaluated at request time.
+  // connection() suspends during prerendering so new Date() is evaluated at request time.
   // Required when cacheComponents:true is enabled in next.config.ts.
-  await io();
+  await connection();
   const now = new Date();
   return db.discount.findMany({
     where: {
@@ -107,9 +107,9 @@ export async function listActiveDiscounts() {
 
 // ---------- First purchase offer (active now) ----------
 export async function getActiveFirstPurchaseOffer() {
-  // io() suspends during prerendering so new Date() is evaluated at request time.
+  // connection() suspends during prerendering so new Date() is evaluated at request time.
   // Required when cacheComponents:true is enabled in next.config.ts.
-  await io();
+  await connection();
   const now = new Date();
   return db.firstPurchaseOffer.findFirst({
     where: {
