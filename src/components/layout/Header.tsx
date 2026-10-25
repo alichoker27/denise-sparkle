@@ -8,7 +8,6 @@ const navLinks = [
   { name: "SHOP", href: "/shop", hasDropdown: true },
   { name: "COLLECTIONS", href: "/collections", hasDropdown: true },
   { name: "ABOUT US", href: "/about", hasDropdown: false },
-  { name: "CONTACT", href: "/contact", hasDropdown: false },
 ];
 
 export function Header() {

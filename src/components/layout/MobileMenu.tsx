@@ -7,8 +7,7 @@ import { MenuIcon, CloseIcon } from "@/components/icons/Icons";
 const navLinks = [
   { name: "Shop", href: "/shop" },
   { name: "Collections", href: "/collections" },
-  { name: "About Us", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: "ABOUT US", href: "/about", hasDropdown: false },
 ];
 
 export function MobileMenu() {
