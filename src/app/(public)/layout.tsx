@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SkipToContent } from "@/components/layout/SkipToContent";
 
 export default function PublicLayout({
   children,
@@ -8,14 +9,17 @@ export default function PublicLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-surface-soft">
+      
+      {/* The invisible keyboard navigation button */}
+      <SkipToContent />
+
       <Header />
-      {/* 
-        flex-1 pushes the footer to the bottom of the screen 
-        even if the page content is short 
-      */}
-      <main className="flex-1">
+      
+      {/* Added id="main-content" so the Skip button knows where to jump */}
+      <main id="main-content" className="flex-1">
         {children}
       </main>
+      
       <Footer />
     </div>
   );
