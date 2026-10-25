@@ -5,8 +5,8 @@ import { Container } from "@/components/layout/Container";
 import { listPublishedProducts, listActiveCategories } from "@/lib/queries";
 import { cn } from "@/lib/cn";
 
-// ─── Async data-fetching component (streams behind Suspense) ──────────────────
-
+// ─── Async data-fetching componentt (streams behind Suspense) ──────────────────
+// new sentence for the test
 async function ShopContent({
   searchParams,
 }: {
