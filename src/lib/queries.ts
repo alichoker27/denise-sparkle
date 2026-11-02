@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 
 // ---------- Categories ----------
 export async function listActiveCategories() {
+  await connection();
   return db.category.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -12,6 +13,7 @@ export async function listActiveCategories() {
 
 // ---------- Products ----------
 export async function listPublishedProducts() {
+  await connection();
   return db.product.findMany({
     where: { status: "PUBLISHED" },
     orderBy: { createdAt: "desc" },
@@ -24,6 +26,7 @@ export async function listPublishedProducts() {
 }
 
 export async function listPublishedProductsByCategory(categorySlug: string) {
+  await connection();
   return db.product.findMany({
     where: {
       status: "PUBLISHED",
@@ -39,6 +42,7 @@ export async function listPublishedProductsByCategory(categorySlug: string) {
 }
 
 export async function getProductBySlug(slug: string) {
+  await connection();
   return db.product.findFirst({
     where: { slug, status: "PUBLISHED" },
     include: {
@@ -50,6 +54,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function listFeaturedProducts() {
+  await connection();
   return db.product.findMany({
     where: { status: "PUBLISHED", isFeatured: true, isAvailable: true },
     orderBy: { createdAt: "desc" },
@@ -63,6 +68,7 @@ export async function listFeaturedProducts() {
 
 // ---------- Bundles ----------
 export async function listPublishedBundles() {
+  await connection();
   return db.bundle.findMany({
     where: { status: "PUBLISHED" },
     orderBy: { createdAt: "desc" },
@@ -77,6 +83,7 @@ export async function listPublishedBundles() {
 }
 
 export async function getBundleBySlug(slug: string) {
+  await connection();
   return db.bundle.findFirst({
     where: { slug, status: "PUBLISHED" },
     include: {
