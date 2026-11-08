@@ -156,29 +156,39 @@ model FirstPurchaseOffer {
 }
 
 model AdminUser {
-  id            Int      @id @default(autoincrement())
-  name          String
-  email         String   @unique
-  passwordHash  String
-  emailVerified Boolean  @default(false)
-  role          String   @default("admin")
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                Int       @id @default(autoincrement())
+  name              String
+  email             String    @unique
+  passwordHash      String
+  emailVerifiedAt   DateTime?
+  role              String    @default("OWNER")
+  isActive          Boolean   @default(true)
+  mfaEnabled        Boolean   @default(false)
+  mfaSecret         String? // Stored encrypted
+  mfaConfirmedAt    DateTime?
+  lastLoginAt       DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  sessions AdminSession[]
-
-  @@index([email])
+  sessions      AdminSession[]
+  mfaChallenges MfaChallenge[]
+  recoveryCodes RecoveryCode[]
+  auditEvents   AuditEvent[]
 }
 
 model AdminSession {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  tokenHash String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id            Int       @id @default(autoincrement())
+  adminUserId   Int
+  tokenHash     String    @unique
+  userAgentHash String?
+  ipHash        String?
+  createdAt     DateTime  @default(now())
+  lastSeenAt    DateTime  @default(now())
+  expiresAt     DateTime
+  revokedAt     DateTime?
 
-  user AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
 
   @@index([expiresAt])
 }
@@ -203,4 +213,52 @@ model PasswordResetToken {
   createdAt DateTime  @default(now())
 
   @@index([expiresAt])
+}
+
+model MfaChallenge {
+  id            Int       @id @default(autoincrement())
+  adminUserId   Int
+  challengeHash String    @unique
+  purpose       String
+  expiresAt     DateTime
+  usedAt        DateTime?
+  attemptCount  Int       @default(0)
+  createdAt     DateTime  @default(now())
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+}
+
+model RecoveryCode {
+  id          Int       @id @default(autoincrement())
+  adminUserId Int
+  codeHash    String    @unique
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+}
+
+model LoginAttempt {
+  id           Int       @id @default(autoincrement())
+  emailHash    String
+  ipHash       String?
+  failedCount  Int       @default(0)
+  windowStart  DateTime  @default(now())
+  blockedUntil DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([emailHash, ipHash])
+}
+
+model AuditEvent {
+  id          Int      @id @default(autoincrement())
+  adminUserId Int?
+  eventType   String
+  entityType  String?
+  entityId    String?
+  success     Boolean
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
 }
